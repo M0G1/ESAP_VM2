@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Drive {
     @Id
 //    @Column(name = "drive_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator",  sequenceName = "drive_id_seq", allocationSize = 1)
     private Long id;
 

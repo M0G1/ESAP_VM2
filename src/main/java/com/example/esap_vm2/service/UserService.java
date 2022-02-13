@@ -1,7 +1,9 @@
 package com.example.esap_vm2.service;
 
+import com.example.esap_vm2.model.Bike;
 import com.example.esap_vm2.model.Drive;
 import com.example.esap_vm2.model.User;
+import com.example.esap_vm2.repository.DriveRepository;
 import com.example.esap_vm2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,27 +20,39 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void create(User user){
+    @Autowired
+    private DriveRepository driveRepository;
+
+    public void create(User user) {
         userRepository.save(user);
     }
 
-    public User get(Long id){ return userRepository.getById(id);}
+    public User get(Long id) {
+        return userRepository.findById(id).get();
+    }
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         return userRepository.findAll().stream().sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
     }
 
-    public void update(Long userId, User newUserData){
-        User user = userRepository.findById(userId).get();
+    public void update(Long userId, User newUserData) {
+        User user = userRepository.getById(userId);
         user.setBudget(newUserData.getBudget());
         user.setName(newUserData.getName());
         userRepository.save(user);
     }
 
-    public void delete(Long id){userRepository.deleteById(id);}
+    public void delete(Long id) {
+        // fetch = FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval = true. doesn't work((
+        User user = userRepository.findById(id).get();
+        for (Drive drive : user.getDrives()) {
+            driveRepository.deleteById(drive.getId());
+        }
+        userRepository.deleteById(id);
+    }
 
-    public List<Drive> getDrives(Long id){
-        User user = userRepository.getById(id);
+    public List<Drive> getDrives(Long id) {
+        User user = userRepository.findById(id).get();
         return user.getDrives().stream().collect(Collectors.toList());
     }
 }

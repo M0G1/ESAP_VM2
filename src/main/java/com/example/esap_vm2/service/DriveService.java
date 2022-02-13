@@ -25,15 +25,16 @@ public class DriveService {
     private DriveRepository driveRepository;
 
     public void create(Drive drive, Long userId, Long bikeId) {
-        User user = userRepository.getById(userId);
-        Bike bike = bikeRepository.getById(bikeId);
+        User user = userRepository.findById(userId).get();
+        Bike bike = bikeRepository.findById(bikeId).get();
         drive.setBike(bike);
         drive.setUser(user);
+        drive.setCost(drive.getHours() * bike.getPrice());
         driveRepository.save(drive);
     }
 
     public Drive get(Long id) {
-        return driveRepository.getById(id);
+        return driveRepository.findById(id).get();
     }
 
     public void delete(Long id) {

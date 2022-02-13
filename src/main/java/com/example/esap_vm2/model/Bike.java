@@ -1,28 +1,31 @@
 package com.example.esap_vm2.model;
 
 import javax.persistence.*;
+
 import com.example.esap_vm2.model.Drive;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name="bikes")
+@Table(name = "bikes")
 public class Bike {
     @Id
 //    @Column(name="bike_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator",  sequenceName = "bike_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator", sequenceName = "bike_id_seq", allocationSize = 1)
     private Long id;
-    
-    @Column(name="bike_name")
+
+    @Column(name = "bike_name")
     private String bikeName;
 
-    @Column(name="cost_per_hour")
+    @Column(name = "cost_per_hour")
     private Integer price; // cost_per_hours
 
     // drives
-    @OneToMany(mappedBy = "bike", fetch = FetchType.EAGER, cascade = CascadeType.ALL) // , orphanRemoval = true,
+    @OneToMany(mappedBy = "bike", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Drive> drives = new HashSet<>();
 
     public Bike() {
@@ -49,8 +52,8 @@ public class Bike {
         return price;
     }
 
-    public void setPrice(Integer cost) {
-        this.price = cost;
+    public void setPrice(Integer costPerHour) {
+        this.price = costPerHour;
     }
 
     public Set<Drive> getDrives() {
@@ -59,5 +62,9 @@ public class Bike {
 
     public void setDrives(Set<Drive> drives) {
         this.drives = drives;
+    }
+
+    public List<Drive> getListDrives() {
+        return this.drives.stream().collect(Collectors.toList());
     }
 }

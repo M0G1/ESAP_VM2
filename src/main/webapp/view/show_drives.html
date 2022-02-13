@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Drives</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/bikes}">Show bikes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/drives}">Show drives</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/users}">Show users</a>
+        </li>
+    </ul>
+    <table class="table table-striped table-dark table-hover">
+        <caption style="caption-side: top">Drives</caption>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Duration(hours)</th>
+            <th>Cost</th>
+            <th>User id/name</th>
+            <th>Bike id/name</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="drive : ${drives}">
+            <td th:text="${drive.id}">
+            </td>
+            <td th:text="${drive.hours}">
+            </td>
+            <td th:text="${drive.cost}">
+            </td>
+            <td th:text="${drive.user.id} + ' / '+ ${drive.user.name}">
+            </td>
+            <td th:text="${drive.bike.id} + ' / ' + ${drive.bike.bikeName}">
+            </td>
+            <td>
+                <form th:action="@{/drives/{id}/delete(id=${drive.id})}" th:method="delete">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    </br>
+    <form th:action="@{/drives/create}" th:method="get">
+        <input type="submit" class="btn btn-primary" value="Create Drive">
+    </form>
+    </br>
+</div>
+</body>
+</html>
